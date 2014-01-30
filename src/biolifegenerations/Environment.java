@@ -38,7 +38,7 @@ public class Environment extends JFrame {
             } catch (Exception e) {
             }
             world.runWorld();
-            this.paint(this.getGraphics());
+            this.paintComponent(this.getGraphics());
         }
     }
     
@@ -85,7 +85,31 @@ public class Environment extends JFrame {
 {
     BufferedImage bufferedImage = new BufferedImage(500, 500, BufferedImage.TYPE_4BYTE_ABGR);
     Graphics2D g2d = bufferedImage.createGraphics();
-    //paint using g2d ...
+    //paint using g2d ...////////////////
+    
+    g2d.setColor(Color.white);
+    g2d.fillRect(30, 50, 400, 400);
+        for (int i = 0; i < 40; i++) {
+            for (int j = 0; j < 40; j++) {
+                 Being temp = world.getBeing(i, j);
+                 String type = temp.getType();
+                 if(type.equalsIgnoreCase("food")){
+                     g2d.setColor(Color.green);
+                     g2d.fill3DRect(this.convertXCoord(i), this.convertYCoord(j), beingSize, beingSize, true);
+                     //g.fillOval(this.convertXCoord(i), this.convertYCoord(j), beingSize, beingSize);
+                 } else if(type.equalsIgnoreCase("predator")){
+                     g2d.setColor(Color.red);
+                     g2d.fillRect(this.convertXCoord(i), this.convertYCoord(j), beingSize-1, beingSize-1);
+                 } else if(type.equalsIgnoreCase("prey")){
+                     g2d.setColor(Color.cyan);
+                     g2d.fill3DRect(this.convertXCoord(i), this.convertYCoord(j), beingSize-1, beingSize-1, true);
+                     //g.fillOval(this.convertXCoord(i), this.convertYCoord(j), beingSize, beingSize);
+                 }
+            }
+    }
+    g2d.setColor(Color.black);
+    g2d.drawRect(30, 50, 400, 400);
+    /////////////////////////////////////
 
     Graphics2D g2dComponent = (Graphics2D) g;
     g2dComponent.drawImage(bufferedImage, null, 0, 0);  
