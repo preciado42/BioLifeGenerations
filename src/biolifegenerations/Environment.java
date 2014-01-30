@@ -19,8 +19,9 @@ public class Environment extends JFrame {
     private Container container;
     private World world;
     
-    public Environment(){
+    public Environment(World world){
         super();
+        this.world = world;
         this.setSize(600, 600);
         this.setResizable(false);
         this.setTitle("Bio Life Generations");
@@ -31,7 +32,6 @@ public class Environment extends JFrame {
     }
     
     public void run(){
-        world = new World();
         while(true){
             try {
                 Thread.sleep(500);
