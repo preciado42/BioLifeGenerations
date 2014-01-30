@@ -18,9 +18,11 @@ public class Environment extends JFrame {
     private int cornerX = 30, cornerY = 50, beingSize = 10;
     private Container container;
     private World world;
+    private int days;
     
     public Environment(World world){
         super();
+        this.days = 0;
         this.world = world;
         this.setSize(600, 600);
         this.setResizable(false);
@@ -34,11 +36,12 @@ public class Environment extends JFrame {
     public void run(){
         while(true){
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (Exception e) {
             }
             world.runWorld();
             this.paintComponent(this.getGraphics());
+            days++;
         }
     }
     

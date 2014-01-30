@@ -7,11 +7,10 @@ package biolifegenerations;
  *
  * @author Angel Preciado
  */
-public class Predator extends Being {
+public class Predator extends Animal{
     private String adaptation;
-    private String type;
     
     public Predator(){
-        this.type = "predator";
+        type = "predator";
     }
 }

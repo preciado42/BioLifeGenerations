@@ -25,9 +25,10 @@ import java.util.Random;
  * @author Angel Preciado
  */
 public class Being {
-    private int health, speed, sense, awareness;
-    private int x, y;
-    private String type;
+    protected int health, speed, sense, awareness;
+    protected int x, y;
+    protected String type;
+    protected int score;
     
     public Being(){
         this.type = "empty";

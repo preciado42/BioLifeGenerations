@@ -26,7 +26,7 @@ public class World {
                 rand = Math.random();
                 if (rand < .80) {
                     map[i][j] = new Being("empty", i, j);
-                } else if (rand < .94) {
+                } else if (rand < .945) {
                     map[i][j] = new Being("food", i, j);
                 } else if (rand < .95) {
                     map[i][j] = new Being("predator", i, j);
