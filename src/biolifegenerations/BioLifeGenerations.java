@@ -12,9 +12,11 @@ package biolifegenerations;
 public class BioLifeGenerations {
 
     private Environment env;
+    private World world;
     
     public void run(){
-        env = new Environment();
+        world = new World();
+        env = new Environment(world);
     }
     
     /**
