@@ -26,7 +26,7 @@ public class Environment extends JFrame {
         this.mapSize = world.getMapSize();
         this.days = 0;
         this.world = world;
-        this.setSize(800, 600);
+        this.setSize(800, 800);
         this.setResizable(true);
         this.setTitle("Bio Life Generations");
         this.setVisible(true);
@@ -41,9 +41,13 @@ public class Environment extends JFrame {
                 Thread.sleep(100);
             } catch (Exception e) {
             }
+            world.incrementDays();
             world.runWorld();
             this.paintComponent(this.getGraphics());
             days++;
+            System.out.println(days);
+            //System.out.println(world.calculateAvgFoodEatenByPrey());
+            //System.out.println(world.getTotalPlantsEaten());
         }
     }
     
@@ -63,7 +67,7 @@ public class Environment extends JFrame {
     @Override
     public void paint(Graphics g){
     g.setColor(Color.white);
-    g.fillRect(30, 50, 800, 600);
+    g.fillRect(30, 50, mapSize*beingSize, mapSize*beingSize);
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                  Being temp = world.getBeing(i, j);
@@ -83,17 +87,17 @@ public class Environment extends JFrame {
             }
     }
     g.setColor(Color.black);
-    g.drawRect(30, 50, 800, 600);
+    g.drawRect(30, 50, mapSize*beingSize, mapSize*beingSize);
     //TEST BLOCK
   }
     protected void paintComponent(Graphics g) 
 {
-    BufferedImage bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_4BYTE_ABGR);
+    BufferedImage bufferedImage = new BufferedImage(cornerX+mapSize*beingSize, cornerY+mapSize*beingSize, BufferedImage.TYPE_4BYTE_ABGR);
     Graphics2D g2d = bufferedImage.createGraphics();
     //paint using g2d ...////////////////
     
     g2d.setColor(Color.white);
-    g2d.fillRect(30, 50, 800, 600);
+    g2d.fillRect(30, 50, mapSize*beingSize, mapSize*beingSize);
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                  Being temp = world.getBeing(i, j);
@@ -113,7 +117,7 @@ public class Environment extends JFrame {
             }
     }
     g2d.setColor(Color.black);
-    g2d.drawRect(30, 50, 800, 600);
+    g2d.drawRect(30, 50, mapSize*beingSize, mapSize*beingSize);
     /////////////////////////////////////
 
     Graphics2D g2dComponent = (Graphics2D) g;

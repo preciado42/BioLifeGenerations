@@ -4,6 +4,7 @@
  */
 package biolifegenerations;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -12,13 +13,18 @@ import java.util.Random;
  */
 public class World {
 
-    private int mapSize;
+    private int mapSize, 
+            days, //days that have passed since simulation began
+            stamina;  //stamina = how many days can pass before beings lose health
     private Being[][] map;
+    //private ArrayList<Being> animals;
 
     public World(int mapSize) {
         this.mapSize = mapSize;
-        map = new Being[mapSize][mapSize];
+        this.map = new Being[mapSize][mapSize];
+        //this.animals = new ArrayList<Being>();
         this.createRandomWorld();
+        this.stamina = 25;
     }
 
     public void createRandomWorld() {
@@ -28,12 +34,17 @@ public class World {
                 rand = Math.random();
                 if (rand < .80) {
                     map[i][j] = new Being("empty", i, j);
-                } else if (rand < .945) {
+                } else if (rand < .946) {
                     map[i][j] = new Being("food", i, j);
+                    map[i][j].assignAttributes();
                 } else if (rand < .95) {
                     map[i][j] = new Being("predator", i, j);
+                    map[i][j].assignAttributes();
+                    //this.animals.add(map[i][j]);
                 } else if (rand < .98) {
                     map[i][j] = new Being("prey", i, j);
+                    map[i][j].assignAttributes();
+                    //this.animals.add(map[i][j]);
                 } else {
                     map[i][j] = new Being("empty", i, j);
                 }
@@ -49,12 +60,13 @@ public class World {
                 //check spot they "chose"
                 if (map[i][j].getType().equalsIgnoreCase("prey")
                         || map[i][j].getType().equalsIgnoreCase("predator")) {
-                    int direction = this.chooseDirection();
+                    int direction = this.chooseDirection(map[i][j]);
                     String inPath = this.lookAhead(map[i][j], direction);
-                    if(!inPath.equalsIgnoreCase("outOfBounds")){
-                    //choose approrpiate action
-                    doAction(map[i][j], inPath, direction);
-                    //move on to next being
+                    if (!inPath.equalsIgnoreCase("outOfBounds")) {
+                        //choose approrpiate action
+                        deathNears(map[i][j]);
+                        doAction(map[i][j], inPath, direction);
+                        //move on to next being
                     }
                 }
             }
@@ -79,12 +91,16 @@ public class World {
                 //eats food
                 //System.out.println("prey ate food");
                 if (dir == 0) {
+                    cur.atePlant();
                     this.replaceBeing(cur, cur.getX() - 1, cur.getY());
                 } else if (dir == 1) {
+                    cur.atePlant();
                     this.replaceBeing(cur, cur.getX() + 1, cur.getY());
                 } else if (dir == 2) {
+                    cur.atePlant();
                     this.replaceBeing(cur, cur.getX(), cur.getY() - 1);
                 } else if (dir == 3) {
+                    cur.atePlant();
                     this.replaceBeing(cur, cur.getX(), cur.getY() + 1);
                 }
             } else {
@@ -92,22 +108,82 @@ public class World {
                 //System.out.println("predator did not move");
             }
 
-        } else if (inPath.equalsIgnoreCase("prey")){
-            if(cur.getType().equalsIgnoreCase("predator")){
+        } else if (inPath.equalsIgnoreCase("prey")) {
+            if (cur.getType().equalsIgnoreCase("predator")) {
                 if (dir == 0) {
+                    cur.atePrey();
                     this.replaceBeing(cur, cur.getX() - 1, cur.getY());
                 } else if (dir == 1) {
+                    cur.atePrey();
                     this.replaceBeing(cur, cur.getX() + 1, cur.getY());
                 } else if (dir == 2) {
+                    cur.atePrey();
                     this.replaceBeing(cur, cur.getX(), cur.getY() - 1);
                 } else if (dir == 3) {
+                    cur.atePrey();
                     this.replaceBeing(cur, cur.getX(), cur.getY() + 1);
                 }
             }
         }
     }
 
-    public int chooseDirection() {
+    public void incrementDays() {
+        this.days++;
+    }
+
+    public void deathNears(Being be) {
+        if (this.days % this.stamina == 0) {
+            if (be.getType().equalsIgnoreCase("prey")) {
+                be.healthDown(3);
+                if (be.getHealth() <= 0) {
+                    System.out.println("A prey being has died.");
+                    this.killBeing(be);
+                }
+            } else if (be.getType().equalsIgnoreCase("predator")) {
+                be.healthDown(1);
+                if (be.getHealth() <= 0) {
+                    System.out.println("A predator being has died on day " + days);
+                    this.killBeing(be);
+                }
+            }
+
+        }
+    }
+
+    public void killBeing(Being be) {
+        map[be.getX()][be.getY()] = new Being("empty", be.getX(), be.getY());
+    }
+
+    public int getTotalPlantsEaten() {
+        int total = 0;
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                total += map[i][j].score;
+            }
+        }
+        return total;
+    }
+
+    public double calculatePlantsEaten() {
+        double totalEaten = 0;
+        double totalEaters = 0;
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                if (map[i][j].getType().equalsIgnoreCase("prey")) {
+                    totalEaten += map[i][j].getScore();
+                    totalEaters++;
+                }
+            }
+        }
+        return totalEaten / totalEaters;
+    }
+
+    public void senseSurroundings(Being be){
+        
+    }
+    
+    public int chooseDirection(Being be) {
+        //add code so direction isnt always random
         Random rand = new Random();
         int dir = rand.nextInt(4);
         return dir;
@@ -174,12 +250,11 @@ public class World {
         map[x][y] = cur;
         int xx = cur.getX();
         int yy = cur.getY();
-        map[xx][yy] = new Being("empty", xx,yy);
+        map[xx][yy] = new Being("empty", xx, yy);
         cur.changeLocation(x, y);
     }
-    
-    public int getMapSize()
-    {
+
+    public int getMapSize() {
         return mapSize;
     }
 

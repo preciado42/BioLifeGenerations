@@ -87,31 +87,49 @@ public class Being {
         }
     }
     
+    public void scoreUp(){
+        this.score++;
+    }
+    
+    public int getScore(){
+        return this.score;
+    }
+    
+    public void atePlant(){
+        this.scoreUp();
+        this.health += 2;
+    }
+    
+    public void atePrey(){
+        this.scoreUp();
+        this.health += 1;
+    }
+    
     public void changeLocation(int xx, int yy){
         this.x = xx;
         this.y = yy;
     }
     
-    public void healthUp(double d){
-        this.health += d;
+    public void healthUp(int i){
+        this.health += i;
     }
     
-    public void healthDown(double d){
-        this.health -= d;
+    public void healthDown(int i){
+        this.health -= i;
     }
     
-    public void speedUp(double d){
-        this.speed += d;
+    public void speedUp(int i){
+        this.speed += i;
     }
     
-    public void speedDown(double d){
-        this.speed -= d;
+    public void speedDown(int i){
+        this.speed -= i;
     }
     ////////////////getters setters incoming
     public void setHealth(int d){
         this.health = d;
     }
-    public int getHealth(int d){
+    public int getHealth(){
         return this.health;
     }
     public void setSpeed(int d){
@@ -129,5 +147,16 @@ public class Being {
     public int getY(){
         return this.y;
     }
-    
+    public void setSense(int i){
+        this.sense = i;
+    }
+    public int getSense(){
+        return this.sense;
+    }
+    public void setAwareness(int i){
+        this.awareness = i;
+    }
+    public int getAwareness(){
+        return this.awareness;
+    }
 }
