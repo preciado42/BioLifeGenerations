@@ -15,7 +15,8 @@ public class BioLifeGenerations {
     private World world;
     
     public void run(){
-        world = new World();
+        //pass in map size
+        world = new World(60);
         env = new Environment(world);
     }
     

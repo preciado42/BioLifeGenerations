@@ -11,6 +11,7 @@ public class Prey extends Animal{
     private String gender;
     
     public Prey(){
+        
         type = "prey";
     }
 }

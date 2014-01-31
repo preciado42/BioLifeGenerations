@@ -11,6 +11,7 @@ public class Predator extends Animal{
     private String adaptation;
     
     public Predator(){
+        
         type = "predator";
     }
 }

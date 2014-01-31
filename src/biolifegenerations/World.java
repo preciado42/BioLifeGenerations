@@ -12,10 +12,12 @@ import java.util.Random;
  */
 public class World {
 
-    private int mapSize = 40;
-    private Being[][] map = new Being[mapSize][mapSize];
+    private int mapSize;
+    private Being[][] map;
 
-    public World() {
+    public World(int mapSize) {
+        this.mapSize = mapSize;
+        map = new Being[mapSize][mapSize];
         this.createRandomWorld();
     }
 
@@ -174,6 +176,11 @@ public class World {
         int yy = cur.getY();
         map[xx][yy] = new Being("empty", xx,yy);
         cur.changeLocation(x, y);
+    }
+    
+    public int getMapSize()
+    {
+        return mapSize;
     }
 
     public void printMap() {

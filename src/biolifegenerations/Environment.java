@@ -19,13 +19,15 @@ public class Environment extends JFrame {
     private Container container;
     private World world;
     private int days;
+    private int mapSize;
     
     public Environment(World world){
         super();
+        this.mapSize = world.getMapSize();
         this.days = 0;
         this.world = world;
-        this.setSize(600, 600);
-        this.setResizable(false);
+        this.setSize(800, 600);
+        this.setResizable(true);
         this.setTitle("Bio Life Generations");
         this.setVisible(true);
         this.setBackground(Color.gray);
@@ -61,9 +63,9 @@ public class Environment extends JFrame {
     @Override
     public void paint(Graphics g){
     g.setColor(Color.white);
-    g.fillRect(30, 50, 400, 400);
-        for (int i = 0; i < 40; i++) {
-            for (int j = 0; j < 40; j++) {
+    g.fillRect(30, 50, 800, 600);
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
                  Being temp = world.getBeing(i, j);
                  String type = temp.getType();
                  if(type.equalsIgnoreCase("food")){
@@ -81,19 +83,19 @@ public class Environment extends JFrame {
             }
     }
     g.setColor(Color.black);
-    g.drawRect(30, 50, 400, 400);
+    g.drawRect(30, 50, 800, 600);
     //TEST BLOCK
   }
     protected void paintComponent(Graphics g) 
 {
-    BufferedImage bufferedImage = new BufferedImage(500, 500, BufferedImage.TYPE_4BYTE_ABGR);
+    BufferedImage bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_4BYTE_ABGR);
     Graphics2D g2d = bufferedImage.createGraphics();
     //paint using g2d ...////////////////
     
     g2d.setColor(Color.white);
-    g2d.fillRect(30, 50, 400, 400);
-        for (int i = 0; i < 40; i++) {
-            for (int j = 0; j < 40; j++) {
+    g2d.fillRect(30, 50, 800, 600);
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
                  Being temp = world.getBeing(i, j);
                  String type = temp.getType();
                  if(type.equalsIgnoreCase("food")){
@@ -111,7 +113,7 @@ public class Environment extends JFrame {
             }
     }
     g2d.setColor(Color.black);
-    g2d.drawRect(30, 50, 400, 400);
+    g2d.drawRect(30, 50, 800, 600);
     /////////////////////////////////////
 
     Graphics2D g2dComponent = (Graphics2D) g;
