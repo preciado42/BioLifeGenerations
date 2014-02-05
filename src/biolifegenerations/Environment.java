@@ -38,7 +38,7 @@ public class Environment extends JFrame {
     public void run(){
         while(true){
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (Exception e) {
             }
             world.incrementDays();
@@ -51,12 +51,24 @@ public class Environment extends JFrame {
         }
     }
     
+    /**
+     * Converts the 2d array coordinates to their actual pixel coordinate locations
+     * for drawing the graphics
+     * @param x
+     * @return 
+     */
     public int convertXCoord(int x){
         if(x == 0){
             return this.cornerX+1+(beingSize*x);
         }
         return this.cornerX+(beingSize*x);
     }
+    /**
+     * Converts the 2d array coordinates to their actual pixel coordinate locations
+     * for drawing the graphics
+     * @param y
+     * @return 
+     */
     public int convertYCoord(int y){
         return this.cornerY+(beingSize*y);
     }

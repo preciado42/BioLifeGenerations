@@ -25,33 +25,49 @@ import java.util.Random;
  * @author Angel Preciado
  */
 public class Being {
-    protected int health, speed, sense, awareness;
-    protected int x, y;
-    protected String type;
-    protected int score;
+    protected int daysLived, //stores how many days this being has lived
+            stamina, //determines how many days this being can last before losign health from not eating
+            health,  //will determine how much health they can lose
+            speed, //determines how many "moves" it can do per day
+            actionsPerDay, //related to speed, the higher the speed the more actions a being can make during the day cycle
+            sense, //determines how likely they are to move towards food instead of randomly 
+            awareness; //determines how likely they are to move away from a predator, not clear what a predator does with this
+    protected int x, y;  //coordinates for this being on the 2d array
+    protected String type; //determines what kind of being this is
+    protected int score; //amount of "food" this being has eaten
     
     public Being(){
         this.type = "empty";
     }
-    
-    public Being(String typ, int xx, int yy){
+    /**
+     * Main constructor currently being used
+     * @param typ
+     * @param xx
+     * @param yy 
+     */
+    public Being(String typ, int xx, int yy, int stam, int days){
         this.type = typ;
         this.x = xx;
         this.y = yy;
+        this.stamina = stam;
+        this.daysLived = days;
+        this.actionsPerDay = 1;
     }
-    
+    //not in use
     public Being(int h, int s){
         this.health = h;
         this.speed = s;
     }
-    
+    // not in use
     public Being(int h, int s, int xx, int yy){
         this.health = h;
         this.speed = s;
         this.x = xx;
         this.y = yy;
     }
-    
+    /**
+     * Is called to randomly assign this being with preset attribute distributions
+     */
     public void assignAttributes(){
         double assign = Math.random();
         if(assign < .20){
@@ -86,7 +102,26 @@ public class Being {
             this.awareness = 40;
         }
     }
-    
+    public void setActionsPerDay(){
+        if(this.speed <25 ){
+            this.actionsPerDay = 1;
+        } else if(this.speed < 50){
+            this.actionsPerDay = 2;
+        } else if(this.speed < 75){
+            this.actionsPerDay = 3;
+        } else if(this.speed <= 100){
+            this.actionsPerDay = 4;
+        }
+    }
+    public int getDaysLived(){
+        return this.daysLived;
+    }
+    public void incrementDaysLived(){
+        this.daysLived++;
+    }
+    public int getStamina(){
+        return this.stamina;
+    }
     public void scoreUp(){
         this.score++;
     }

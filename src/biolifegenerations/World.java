@@ -20,11 +20,11 @@ public class World {
     //private ArrayList<Being> animals;
 
     public World(int mapSize) {
+        this.stamina = 25;
         this.mapSize = mapSize;
         this.map = new Being[mapSize][mapSize];
         //this.animals = new ArrayList<Being>();
         this.createRandomWorld();
-        this.stamina = 25;
     }
 
     public void createRandomWorld() {
@@ -33,29 +33,40 @@ public class World {
             for (int j = 0; j < mapSize; j++) {
                 rand = Math.random();
                 if (rand < .80) {
-                    map[i][j] = new Being("empty", i, j);
+                    map[i][j] = new Being("empty", i, j,stamina, 1);
                 } else if (rand < .946) {
-                    map[i][j] = new Being("food", i, j);
+                    map[i][j] = new Being("food", i, j,stamina,1);
                     map[i][j].assignAttributes();
+                    map[i][j].setActionsPerDay();
                 } else if (rand < .95) {
-                    map[i][j] = new Being("predator", i, j);
+                    map[i][j] = new Being("predator", i, j,stamina,1);
                     map[i][j].assignAttributes();
+                    map[i][j].setActionsPerDay();
                     //this.animals.add(map[i][j]);
                 } else if (rand < .98) {
-                    map[i][j] = new Being("prey", i, j);
+                    map[i][j] = new Being("prey", i, j,stamina,1);
                     map[i][j].assignAttributes();
+                    map[i][j].setActionsPerDay();
                     //this.animals.add(map[i][j]);
                 } else {
-                    map[i][j] = new Being("empty", i, j);
+                    map[i][j] = new Being("empty", i, j,stamina,1);
                 }
             }
         }
+    
     }
 
+    /**
+     * Should handle all the events that need to take place within one day in this simulation
+     * This should be the main logic that controls what happens and all methods should probably
+     * be called from within this loop
+     */
     public void runWorld() {
+        for (int z = 1; z < 5; z++) { // does this from 1 - 4 because that is the highest number of actions that can be taken by any being at this point
         //go through each square determine if there is a being to move
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
+                if(map[i][j].actionsPerDay == z){
                 //determine where they will move
                 //check spot they "chose"
                 if (map[i][j].getType().equalsIgnoreCase("prey")
@@ -69,11 +80,18 @@ public class World {
                         //move on to next being
                     }
                 }
-            }
-
-        }
+            }}
+        }}
     }
 
+    /**
+     *  Another place where things may take place, right now this method decides
+     * what action to take depending on direction the being is headed and what is
+     * currently in its path
+     * @param cur the being we are currently working with
+     * @param inPath String containing the type of object in its path
+     * @param dir the direction this being is headed
+     */
     public void doAction(Being cur, String inPath, int dir) {
         if (inPath.equalsIgnoreCase("empty")) { //being just moves
             //System.out.println("being has moved");
@@ -127,22 +145,33 @@ public class World {
         }
     }
 
+    public void incrementBeingDaysLived(Being be){
+        be.incrementDaysLived();
+    }
+    
     public void incrementDays() {
         this.days++;
     }
 
+    /**
+     * Method currently decreases the health of beings after a certain amount of
+     * days have passed, called stamina for now.  We may want to change this
+     * @param be being currently being worked with
+     */
     public void deathNears(Being be) {
-        if (this.days % this.stamina == 0) {
+        if (be.getDaysLived() % be.getStamina() == 0) {
             if (be.getType().equalsIgnoreCase("prey")) {
                 be.healthDown(3);
                 if (be.getHealth() <= 0) {
-                    System.out.println("A prey being has died.");
+                    System.out.println("A prey being has died, it lived "+be.getDaysLived()
+                            +" days and died on the "+this.days+" day.");
                     this.killBeing(be);
                 }
             } else if (be.getType().equalsIgnoreCase("predator")) {
                 be.healthDown(1);
                 if (be.getHealth() <= 0) {
-                    System.out.println("A predator being has died on day " + days);
+                    System.out.println("A predator being has died, it lived "+be.getDaysLived()
+                    +" days and died on the "+this.days+" day.");
                     this.killBeing(be);
                 }
             }
@@ -150,8 +179,13 @@ public class World {
         }
     }
 
+    /**
+     * Kills the being that is passed in and replaces it with an empty being object,
+     * essentially removing them from the game.
+     * @param be Being to be killed
+     */
     public void killBeing(Being be) {
-        map[be.getX()][be.getY()] = new Being("empty", be.getX(), be.getY());
+        map[be.getX()][be.getY()] = new Being("empty", be.getX(), be.getY(),stamina,0);
     }
 
     public int getTotalPlantsEaten() {
@@ -181,7 +215,11 @@ public class World {
     public void senseSurroundings(Being be){
         
     }
-    
+    /**
+     * Choose a random direction
+     * @param be
+     * @return 
+     */
     public int chooseDirection(Being be) {
         //add code so direction isnt always random
         Random rand = new Random();
@@ -218,6 +256,12 @@ public class World {
         return "outOfBounds";
     }
 
+    /**
+     * Checks that the being's next move is actually within bounds.
+     * @param cur
+     * @param dir
+     * @return 
+     */
     public boolean inBounds(Being cur, int dir) {
         if (cur.getX() == 0) { //left
             if (dir == 0) {
@@ -242,15 +286,27 @@ public class World {
         return true;
     }
 
+    /**
+     * Returns the being currently at this location
+     * @param x
+     * @param y
+     * @return 
+     */
     public Being getBeing(int x, int y) {
         return this.map[x][y];
     }
 
+    /**
+     * Replaces the passed in being to the coordinates given
+     * @param cur
+     * @param x
+     * @param y 
+     */
     public void replaceBeing(Being cur, int x, int y) {
         map[x][y] = cur;
         int xx = cur.getX();
         int yy = cur.getY();
-        map[xx][yy] = new Being("empty", xx, yy);
+        map[xx][yy] = new Being("empty", xx, yy,stamina,0);
         cur.changeLocation(x, y);
     }
 
